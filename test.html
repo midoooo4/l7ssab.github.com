@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L7SSAB - Rami</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom right, #007bff, #6610f2);
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    #playerForm, #gameActions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 1rem;
+      min-width: 150px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background: #28a745;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    #players {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+
+    #players li {
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #players input {
+      margin-right: 10px;
+      flex: 1;
+      max-width: 80px;
+      padding: 5px;
+      font-size: 0.9rem;
+    }
+
+    #players span {
+      font-weight: bold;
+    }
+
+    #currentDealer {
+      text-align: center;
+      font-size: 1.2rem;
+      background: #f1f1f1;
+      border: 2px solid #007bff;
+      color: #333;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    #history {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #history table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    #history th, #history td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    #history th {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    @media (max-width: 768px) {
+      #playerForm {
+        flex-direction: column;
+      }
+      #players li {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>L7SSAB - Rami</h1>
+    
+    <div id="playerForm">
+      <input type="text" id="playerName" placeholder="Nom du joueur">
+      <button onclick="addPlayer()">Ajouter Joueur</button>
+    </div>
+    
+    <div id="gameActions">
+      <button onclick="startNewGame()">Nouvelle Partie</button>
+      <button onclick="resetScores()">Réinitialiser les Scores</button>
+      <button onclick="toggleHistory()">Afficher l'Historique</button>
+    </div>
+    
+    <ul id="players"></ul>
+
+    <div id="currentDealer">
+      TFIRI9A : <span id="dealerName">Aucun joueur</span>  | 
+      MIKINA : <span id="maxPlayer">Aucun</span>  | 
+      AIT LM9AWED : <span id="minPlayer">Aucun</span>
+    </div>
+
+    <!-- Historique des scores -->
+    <div id="history">
+      <h3>Historique des Scores</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Nom du Joueur</th>
+          </tr>
+        </thead>
+        <tbody id="historyTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let players = [];
+    let currentGameIndex = 0;
+    let dealerIndex = 0;
+
+    // Ajouter un joueur
+    function addPlayer() {
+      const playerNameInput = document.getElementById("playerName");
+      const playerName = playerNameInput.value.trim();
+
+      if (playerName === "") {
+        alert("Veuillez entrer un nom de joueur !");
+        return;
+      }
+
+      players.push({ name: playerName, totalScore: 0, gameScores: [] });
+      playerNameInput.value = "";
+      renderPlayers();
+      updateDealer();
+    }
+
+    // Démarrer une nouvelle partie
+    function startNewGame() {
+      // Vérifier chaque joueur et initialiser à 0 les scores vides
+      players.forEach(player => {
+        if (player.gameScores[currentGameIndex] === undefined || player.gameScores[currentGameIndex] === "") {
+          player.gameScores[currentGameIndex] = 0;  // Initialiser à 0 les scores vides
+        }
+      });
+
+      // Sauvegarder les scores de cette partie dans totalScore
+      players.forEach(player => {
+        if (player.gameScores[currentGameIndex] !== undefined) {
+          player.totalScore += player.gameScores[currentGameIndex];
+        }
+      });
+
+      currentGameIndex++;
+      renderPlayers();
+      updateDealer();
+      updateHistory();
+    }
+
+    // Mettre à jour le score d'un joueur pour la partie en cours
+    function updateScore(playerIndex, value) {
+      // Si la cellule est vide, mettre 0
+      if (value.trim() === "") {
+        value = 0;
+      } else {
+        value = parseInt(value, 10) || 0;
+      }
+      players[playerIndex].gameScores[currentGameIndex] = value;
+      renderPlayers();
+      updateDealer();
+      updateHistory();
+    }
+
+    // Afficher la liste des joueurs et leurs scores
+    function renderPlayers() {
+      const playerList = document.getElementById("players");
+      playerList.innerHTML = "";
+
+      players.forEach((player, playerIndex) => {
+        const totalScore = player.totalScore;
+
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <span>${player.name} - Total : ${totalScore}</span>
+          <input type="number" value="${player.gameScores[currentGameIndex] || 0}" 
+                 onblur="updateScore(${playerIndex}, this.value)" 
+                 oninput="handleEmptyInput(${playerIndex}, this)" 
+                 placeholder="Score de cette partie">
+        `;
+        playerList.appendChild(li);
+      });
+    }
+
+    // S'assurer que la valeur d'entrée vide est initialisée à "0"
+    function handleEmptyInput(playerIndex, inputElement) {
+      if (inputElement.value.trim() === "") {
+        players[playerIndex].gameScores[currentGameIndex] = 0;
+        inputElement.value = 0;
+      }
+    }
+
+    // Mettre à jour le joueur qui distribue les cartes
+    function updateDealer() {
+      if (players.length > 0) {
+        dealerIndex = currentGameIndex % players.length;
+        document.getElementById("dealerName").textContent = players[dealerIndex].name;
+
+        let maxScore = -Infinity;
+        let minScore = Infinity;
+        let maxPlayer = "Aucun";
+        let minPlayer = "Aucun";
+
+        players.forEach(player => {
+          const total = player.totalScore;
+          if (total > maxScore) {
+            maxScore = total;
+            maxPlayer = player.name;
+          }
+          if (total < minScore) {
+            minScore = total;
+            minPlayer = player.name;
+          }
+        });
+
+        document.getElementById("maxPlayer").textContent = maxPlayer;
+        document.getElementById("minPlayer").textContent = minPlayer;
+      }
+    }
+
+    // Réinitialiser les scores
+    function resetScores() {
+      players.forEach(player => {
+        player.totalScore = 0;
+        player.gameScores = [];
+      });
+      currentGameIndex = 0;
+      renderPlayers();
+      updateDealer();
+      updateHistory();
+    }
+
+    // Afficher l'historique des scores
+    function toggleHistory() {
+      const historySection = document.getElementById("history");
+      historySection.style.display = (historySection.style.display === "none" || historySection.style.display === "") ? "block" : "none";
+    }
+
+    // Mettre à jour l'historique des scores
+    function updateHistory() {
+      const historyTableBody = document.getElementById("historyTableBody");
+      historyTableBody.innerHTML = "";
+
+      players.forEach(player => {
+        const playerName = player.name;
+        const scores = player.gameScores.map(score => (score === 0 ? "x" : score)).join("</td><td>");
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${playerName}</td><td>${scores}</td>`;
+        historyTableBody.appendChild(tr);
+      });
+    }
+  </script>
+</body>
+</html>
