@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>L7SSAB - Rami</title>
+  <title>7SSIBA</title>
   <style>
+    /* General Styles */
     * {
       margin: 0;
       padding: 0;
@@ -13,168 +14,217 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to bottom right, #6a11cb, #2575fc);
-      color: #fff;
-      margin: 0;
-      padding: 0;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: background 0.3s, color 0.3s;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
+    :root {
+      --bg-color: #f5f5f5;
+      --text-color: #333;
+      --container-bg: rgba(255, 255, 255, 0.9);
+      --primary-color: #6a11cb;
+      --secondary-color: #2575fc;
+      --danger-color: #dc3545;
+      --success-color: #28a745;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #1a1a1a;
+      --text-color: #f5f5f5;
+      --container-bg: rgba(0, 0, 0, 0.8);
+      --shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
+    }
+
+    /* Centrer le contenu principal */
     .container {
-      max-width: 1000px;
+      max-width: 800px;
       width: 90%;
       margin: 20px auto;
       padding: 20px;
-      background: rgba(255, 255, 255, 0.9);
+      background: var(--container-bg);
       border-radius: 15px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
     h1 {
-      text-align: center;
       font-size: 2.5rem;
       margin-bottom: 20px;
-      color: #333;
+      color: var(--primary-color);
     }
 
+    /* Centrer les boutons dans leurs conteneurs */
     #playerForm, #gameActions {
       display: flex;
+      flex-direction: column;
+      align-items: center;
       gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 20px;
+      width: 100%;
     }
 
+    /* Ajuster la largeur des boutons et des inputs */
     input, button {
+      width: 100%;
+      max-width: 300px;
       padding: 12px;
       border-radius: 8px;
       font-size: 1rem;
-      min-width: 150px;
-      box-sizing: border-box;
       border: none;
       outline: none;
       transition: all 0.3s ease;
     }
 
     input {
-      background: #f1f1f1;
-      color: #333;
+      background: var(--bg-color);
+      color: var(--text-color);
+      border: 1px solid #ddd;
     }
 
     input:focus {
-      background: #fff;
-      box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 8px rgba(106, 17, 203, 0.5);
     }
 
     button {
-      background: #28a745;
+      background: var(--primary-color);
       color: #fff;
       cursor: pointer;
       font-weight: bold;
     }
 
     button:hover {
-      background: #218838;
+      opacity: 0.9;
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
+    .delete-btn {
+      background: var(--danger-color);
+    }
+
+    .toggle-theme {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--primary-color);
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    /* Centrer la liste des joueurs */
     #players {
       list-style: none;
       margin-bottom: 20px;
+      width: 100%;
+      max-width: 600px;
     }
 
     #players li {
-      background: #fff;
+      background: var(--bg-color);
       border: 1px solid #ddd;
       border-radius: 10px;
       padding: 15px;
       margin-bottom: 10px;
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     #players li:hover {
       transform: translateY(-3px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--shadow);
     }
 
     #players input {
       margin-right: 10px;
       flex: 1;
       max-width: 80px;
-      padding: 8px;
-      font-size: 0.9rem;
-      border-radius: 5px;
-      border: 1px solid #ddd;
     }
 
-    #players span {
-      font-weight: bold;
-      color: #333;
-    }
-
-    #currentDealer {
+    /* Centrer le game info */
+    #gameInfo {
       text-align: center;
       font-size: 1.2rem;
-      background: rgba(241, 241, 241, 0.9);
-      border: 2px solid #007bff;
-      color: #333;
+      background: var(--bg-color);
+      border: 2px solid var(--primary-color);
+      color: var(--text-color);
       padding: 15px;
       border-radius: 10px;
       margin-bottom: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
     }
 
+    /* Centrer le leaderboard */
+    #leaderboard {
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    #leaderboard h3 {
+      margin-bottom: 10px;
+      color: var(--primary-color);
+    }
+
+    #leaderboard ol {
+      list-style: none;
+      padding: 0;
+    }
+
+    #leaderboard li {
+      background: var(--bg-color);
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Centrer l'historique */
     #history {
       display: none;
       margin-top: 20px;
+      width: 100%;
+      max-width: 600px;
     }
 
     #history table {
       width: 100%;
       border-collapse: collapse;
-      background: #fff;
+      background: var(--bg-color);
       border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     #history th, #history td {
       padding: 12px;
       border: 1px solid #ddd;
       text-align: center;
-      color: #333;
+      color: var(--text-color);
     }
 
     #history th {
-      background-color: #007bff;
+      background-color: var(--primary-color);
       color: #fff;
     }
 
-    .delete-btn {
-      background: #dc3545;
-      color: #fff;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .delete-btn:hover {
-      background: #c82333;
-      transform: scale(1.1);
-    }
-
+    /* Responsive Design */
     @media (max-width: 768px) {
       #playerForm {
         flex-direction: column;
@@ -192,34 +242,48 @@
 </head>
 <body>
   <div class="container">
-    <h1>L7SSAB - Rami</h1>
+    <h1>7SSIBA</h1>
+    <div class="toggle-theme" onclick="toggleTheme()">🌓</div>
     
+    <!-- Player Form -->
     <div id="playerForm">
       <input type="text" id="playerName" placeholder="Nom du joueur">
       <button onclick="addPlayer()">Ajouter Joueur</button>
     </div>
     
+    <!-- Game Actions -->
+	<br>
     <div id="gameActions">
       <button onclick="startNewGame()">Nouvelle Partie</button>
       <button onclick="resetScores()">Réinitialiser les Scores</button>
+      <button onclick="resetGame()">Réinitialiser le jeu</button>
       <button onclick="toggleHistory()">Afficher l'Historique</button>
     </div>
     
+    <!-- Player List -->
     <ul id="players"></ul>
 
-    <div id="currentDealer">
+    <!-- Game Info -->
+    <div id="gameInfo">
       TFIRI9A : <span id="dealerName">Aucun joueur</span>  | 
       MIKINA : <span id="maxPlayer">Aucun</span>  | 
       AIT LM9AWED : <span id="minPlayer">Aucun</span>
     </div>
 
-    <!-- Historique des scores -->
+    <!-- Leaderboard -->
+    <div id="leaderboard">
+      <h3>Classement:</h3>
+      <ol id="leaderboardList"></ol>
+    </div>
+
+    <!-- History Section -->
     <div id="history">
       <h3>Historique des Scores</h3>
       <table>
         <thead>
           <tr>
             <th>Nom du Joueur</th>
+            <th>Scores</th>
           </tr>
         </thead>
         <tbody id="historyTableBody"></tbody>
@@ -239,17 +303,16 @@
       localStorage.setItem('dealerIndex', dealerIndex);
     }
 
-    // Ajouter un joueur
+    // Add a player
     function addPlayer() {
       const playerNameInput = document.getElementById("playerName");
       const playerName = playerNameInput.value.trim();
 
-      if (playerName === "") {
+      if (!playerName) {
         alert("Veuillez entrer un nom de joueur !");
         return;
       }
 
-      // Check if player already exists
       if (players.some(player => player.name === playerName)) {
         alert("Ce joueur existe déjà !");
         return;
@@ -259,61 +322,49 @@
       playerNameInput.value = "";
       renderPlayers();
       updateDealer();
+      updateLeaderboard();
       saveState();
     }
 
-    // Démarrer une nouvelle partie
+    // Start a new game
     function startNewGame() {
-      // Vérifier chaque joueur et initialiser à 0 les scores vides
       players.forEach(player => {
         if (player.gameScores[currentGameIndex] === undefined || player.gameScores[currentGameIndex] === "") {
-          player.gameScores[currentGameIndex] = 0;  // Initialiser à 0 les scores vides
+          player.gameScores[currentGameIndex] = 0;
         }
-      });
-
-      // Sauvegarder les scores de cette partie dans totalScore
-      players.forEach(player => {
-        if (player.gameScores[currentGameIndex] !== undefined) {
-          player.totalScore += player.gameScores[currentGameIndex];
-        }
+        player.totalScore += player.gameScores[currentGameIndex] || 0;
       });
 
       currentGameIndex++;
       renderPlayers();
       updateDealer();
+      updateLeaderboard();
       updateHistory();
       saveState();
     }
 
-    // Mettre à jour le score d'un joueur pour la partie en cours
+    // Update a player's score
     function updateScore(playerIndex, value) {
-      // Si la cellule est vide, mettre 0
-      if (value.trim() === "") {
-        value = 0;
-      } else {
-        value = parseInt(value, 10) || 0;
-      }
+      value = value.trim() === "" ? 0 : parseInt(value, 10) || 0;
       players[playerIndex].gameScores[currentGameIndex] = value;
       renderPlayers();
       updateDealer();
+      updateLeaderboard();
       updateHistory();
       saveState();
     }
 
-    // Afficher la liste des joueurs et leurs scores
+    // Render the player list
     function renderPlayers() {
       const playerList = document.getElementById("players");
       playerList.innerHTML = "";
 
       players.forEach((player, playerIndex) => {
-        const totalScore = player.totalScore;
-
         const li = document.createElement("li");
         li.innerHTML = `
-          <span>${player.name} - Total : ${totalScore}</span>
+          <span>${player.name} - Total : ${player.totalScore}</span>
           <input type="number" value="${player.gameScores[currentGameIndex] || 0}" 
                  onblur="updateScore(${playerIndex}, this.value)" 
-                 oninput="handleEmptyInput(${playerIndex}, this)" 
                  placeholder="Score de cette partie">
           <button class="delete-btn" onclick="deletePlayer(${playerIndex})">x</button>
         `;
@@ -321,15 +372,7 @@
       });
     }
 
-    // S'assurer que la valeur d'entrée vide est initialisée à "0"
-    function handleEmptyInput(playerIndex, inputElement) {
-      if (inputElement.value.trim() === "") {
-        players[playerIndex].gameScores[currentGameIndex] = 0;
-        inputElement.value = 0;
-      }
-    }
-
-    // Mettre à jour le joueur qui distribue les cartes
+    // Update dealer and leaderboard
     function updateDealer() {
       if (players.length > 0) {
         dealerIndex = currentGameIndex % players.length;
@@ -357,7 +400,25 @@
       }
     }
 
-    // Réinitialiser les scores
+    // Update leaderboard
+    function updateLeaderboard() {
+      const leaderboardList = document.getElementById("leaderboardList");
+      leaderboardList.innerHTML = "";
+
+      // Trier les joueurs par score croissant (min en premier)
+      const sortedPlayers = [...players].sort((a, b) => a.totalScore - b.totalScore);
+
+      sortedPlayers.forEach((player, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <span>${index + 1}. ${player.name}</span>
+          <span>${player.totalScore} points</span>
+        `;
+        leaderboardList.appendChild(li);
+      });
+    }
+
+    // Reset scores
     function resetScores() {
       if (confirm("Êtes-vous sûr de vouloir réinitialiser les scores ?")) {
         players.forEach(player => {
@@ -367,45 +428,67 @@
         currentGameIndex = 0;
         renderPlayers();
         updateDealer();
+        updateLeaderboard();
         updateHistory();
         saveState();
       }
     }
 
-    // Afficher l'historique des scores
-    function toggleHistory() {
-      const historySection = document.getElementById("history");
-      historySection.style.display = (historySection.style.display === "none" || historySection.style.display === "") ? "block" : "none";
+    // Reset game (clear all players and scores)
+    function resetGame() {
+      if (confirm("Êtes-vous sûr de vouloir réinitialiser le jeu ? Cela supprimera tous les joueurs et les scores.")) {
+        players = [];
+        currentGameIndex = 0;
+        dealerIndex = 0;
+        renderPlayers();
+        updateDealer();
+        updateLeaderboard();
+        updateHistory();
+        saveState();
+      }
     }
 
-    // Mettre à jour l'historique des scores
+    // Toggle history visibility
+    function toggleHistory() {
+      const historySection = document.getElementById("history");
+      historySection.style.display = historySection.style.display === "none" ? "block" : "none";
+    }
+
+    // Update history table
     function updateHistory() {
       const historyTableBody = document.getElementById("historyTableBody");
       historyTableBody.innerHTML = "";
 
       players.forEach(player => {
-        const playerName = player.name;
-        const scores = player.gameScores.map(score => (score === 0 ? "x" : score)).join("</td><td>");
+        const scores = player.gameScores.map(score => score === 0 ? "x" : score).join("</td><td>");
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${playerName}</td><td>${scores}</td>`;
+        tr.innerHTML = `<td>${player.name}</td><td>${scores}</td>`;
         historyTableBody.appendChild(tr);
       });
     }
 
-    // Supprimer un joueur
+    // Delete a player
     function deletePlayer(playerIndex) {
       if (confirm("Êtes-vous sûr de vouloir supprimer ce joueur ?")) {
         players.splice(playerIndex, 1);
         renderPlayers();
         updateDealer();
+        updateLeaderboard();
         updateHistory();
         saveState();
       }
     }
 
+    // Toggle dark/light theme
+    function toggleTheme() {
+      const body = document.body;
+      body.dataset.theme = body.dataset.theme === "dark" ? "light" : "dark";
+    }
+
     // Initial render
     renderPlayers();
     updateDealer();
+    updateLeaderboard();
     updateHistory();
   </script>
 </body>
